@@ -1,7 +1,7 @@
 {
   "name": "wds-connect",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "node scripts/wds-dev-runner.mjs",
