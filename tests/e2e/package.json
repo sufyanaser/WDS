@@ -1,0 +1,14 @@
+{
+  "name": "wds-connect-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E Requirement-Driven Test Suite for WDS Connect",
+  "type": "module",
+  "scripts": {
+    "test": "node runner.mjs",
+    "test:node": "node --test \"tier*/**/*.test.mjs\"",
+    "test:tier1": "node --test \"tier1-features/**/*.test.mjs\"",
+    "test:tier2": "node --test \"tier2-boundaries/**/*.test.mjs\"",
+    "test:tier3": "node --test \"tier3-pairwise/**/*.test.mjs\"",
+    "test:tier4": "node --test \"tier4-scenarios/**/*.test.mjs\""
+  }
+}

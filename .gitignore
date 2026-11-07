@@ -1,0 +1,90 @@
+# ==============================================================================
+# WDS (Wajibati Development Studio) - Git Ignore Rules
+# ==============================================================================
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build Outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Tauri & Rust Build Artifacts
+src-tauri/target/
+src-tauri/gen/
+src-tauri/WixTools/
+target/
+
+# Release Binaries & Installers
+*.exe
+*.msi
+*.dmg
+*.deb
+*.app
+*.pdb
+*.zip
+release-artifacts/
+
+# Environment & Sensitive Credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.priv
+id_rsa*
+id_ed25519*
+tauri-*.key
+
+# Local platform tools & binaries
+platform-tools/
+backup-*/
+
+# Local scratch files & non-source scripts
+/auth.rs
+/remote_check.rs
+/Apply-WDS-*.ps1
+/README.txt
+scripts/pubkey.json
+scripts/find_window.ps1
+scripts/check_pid_window.ps1
+scripts/save_report.ps1
+scripts/setup_updater_keys.mjs
+
+# Logs & Debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor & IDE Metadata
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS Generated Files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Agent Metadata
+.agents/

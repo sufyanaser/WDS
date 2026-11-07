@@ -1,0 +1,52 @@
+[package]
+name = "wds-connect"
+version = "0.1.0"
+description = "Compact desktop SSH client connecting Windows to MacBook"
+authors = ["SUFYAN"]
+edition = "2021"
+
+[lib]
+name = "wds_connect_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "wds-connect"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-util = "0.7"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4"] }
+
+# Native SSH & Cryptographic stack
+russh = { version = "0.65.1", default-features = false, features = ["flate2", "ring"] }
+russh-keys = "0.50.0-beta.7"
+ssh-key = { version = "0.6.7", features = ["ed25519", "std", "crypto"] }
+sha2 = "0.10"
+md-5 = "0.10"
+base64 = "0.22"
+hex = "0.4"
+
+# OS Credential Storage & Memory Protection
+keyring = "4.2.0"
+zeroize = { version = "1.8", features = ["zeroize_derive"] }
+
+# Utilities & Error Handling
+regex = "1.11"
+thiserror = "2"
+tauri-plugin-updater = "2.14.1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

@@ -1,0 +1,67 @@
+name: WDS Official Windows Release & Auto-Updater
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    name: Build Signed Windows NSIS Installer & Publish Release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Verify Quality Gates
+        run: |
+          npm run lint
+          npm run build
+          cargo test --lib --manifest-path src-tauri/Cargo.toml
+
+      - name: Build Tauri Application & Generate Signed Updater Bundle
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'Wajibati Development Studio ${{ github.ref_name }}'
+          releaseBody: |
+            ## Wajibati Development Studio (WDS) — الإصدار الرسمي المعتمد
+
+            ### ميزات هذا الإصدار:
+            - **Flat Desktop-First Workspace:** واجهة عمل مسطحة ومنظمة بنسبة 60% لسطح المكتب و20% لأندرويد و20% لآيفون مع فواصل سحب تفاعلية.
+            - **محاكي Android المباشر:** تحكم تفاعلي مباشر باللمس والسحب متطابق فيزيائياً مع أبعاد شاشة 1080×2400.
+            - **جسر محاكي iPhone (iOS Simulator):** ربط سلس مع MacBook عبر WDS Connect وإقلاع المحاكي وبث شاشته بنقرة واحدة.
+            - **عزل تام للجلسات (RFC 6454):** فصل جلسات التخزين والمصادقة على المنافذ 5173، 5174، و5175.
+            - **التحديث التلقائي الآمن (Tauri Auto-Updater):** فحص وتثبيت التحديثات الموقعة رقمياً دون فقدان إعدادات المستخدم.
+
+            ### التحقق من الأمان وسلامة الملفات:
+            يتم توقيع حزم التحديث رقمياً بمفتاح Minisign المعتمد، وتأكيد صحتها قبل التثبيت.
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
+          updaterJsonPreferNsis: true
+          args: --bundles nsis

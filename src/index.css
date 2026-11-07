@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  /* Canvas & Surfaces */
+  --bg-base: #0b0d11;
+  --bg-surface: #161920;
+  --bg-surface-hover: #1c202a;
+  --bg-elevated: #1e222b;
+  --bg-input: #12141a;
+
+  /* Borders & Dividers */
+  --border-subtle: #262c36;
+  --border-focus: #38bdf8;
+  --border-active: #0ea5e9;
+
+  /* Typography */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+
+  /* Accent & State Colors */
+  --accent-cyan: #0ea5e9;
+  --accent-cyan-hover: #38bdf8;
+  --status-connected: #10b981;
+  --status-connecting: #0ea5e9;
+  --status-challenge: #f59e0b;
+  --status-error: #ef4444;
+  --status-disconnected: #64748b;
+
+  /* Focus & Motion */
+  --focus-ring: 0 0 0 2px var(--border-focus);
+  --transition-smooth: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar for Diagnostics Log */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #0e1015;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #262c36;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #38bdf8;
+}
+
+/* WCAG 2.2 AAA Focus Indicators */
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Restrained Motion & Reduced Motion Media Query */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

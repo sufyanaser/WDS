@@ -1,0 +1,52 @@
+name: WDS Continuous Integration
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Lint, Test & Quality Gates
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Frontend TypeScript & Lint Check
+        run: npm run lint
+
+      - name: Frontend Production Bundle Build
+        run: npm run build
+
+      - name: Rust Cargo Check
+        run: cargo check --manifest-path src-tauri/Cargo.toml
+
+      - name: Rust Unit & Integration Tests
+        run: cargo test --lib --manifest-path src-tauri/Cargo.toml
+
+      - name: Multi-Platform Session Isolation Verification
+        run: node tests/test-session-isolation.mjs
