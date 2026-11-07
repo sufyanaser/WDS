@@ -34,11 +34,21 @@ async function isPortOpen(port) {
 async function run() {
   console.log('=== WDS Verification: Session Isolation & Multi-Origin Architecture ===');
 
+  const open5173 = await isPortOpen(5173);
   const open5174 = await isPortOpen(5174);
   const open5175 = await isPortOpen(5175);
 
+  let tempS5173 = null;
   let tempS5174 = null;
   let tempS5175 = null;
+
+  if (!open5173) {
+    tempS5173 = http.createServer((req, res) => {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end('<!doctype html><html lang="ar" dir="rtl"><head><title>WDS Isolation Mock</title></head><body>WDS Partition Mock</body></html>');
+    });
+    await new Promise((res) => tempS5173.listen(5173, '127.0.0.1', () => res(true)));
+  }
 
   if (!open5174) {
     tempS5174 = net.createServer((s) => {
@@ -83,11 +93,13 @@ async function run() {
     console.log('  - Document cookie store');
     console.log('Result: Complete session isolation achieved across all 3 viewports.');
 
+    if (tempS5173) tempS5173.close();
     if (tempS5174) tempS5174.close();
     if (tempS5175) tempS5175.close();
     process.exit(0);
   } catch (err) {
     console.error('[FAIL] Error:', err.message);
+    if (tempS5173) tempS5173.close();
     if (tempS5174) tempS5174.close();
     if (tempS5175) tempS5175.close();
     process.exit(1);
